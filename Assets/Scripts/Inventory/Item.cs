@@ -56,7 +56,7 @@ public class Item
         set { _icon = value; }
     }
 
-    public GameObject Meshtype
+    public GameObject MeshType
     {
         get { return _mesh; }
         set { _mesh = value; }
