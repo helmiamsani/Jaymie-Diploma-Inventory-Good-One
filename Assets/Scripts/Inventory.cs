@@ -8,6 +8,7 @@ namespace Linear
     {
         public GUISkin invSkin;
         public GUIStyle boxStyle;
+        public GUIStyle baseBackgroundStyle;
         #region Variables
         public List<Item> inv = new List<Item>(); // List of items
         public Item selectedItem;
@@ -49,6 +50,10 @@ namespace Linear
             {
                 inv.Add(ItemData.CreateItem(Random.Range(0, 4)));
             }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                inv[3].Amount += 1;
+            }
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 showInv = !showInv;
@@ -76,18 +81,22 @@ namespace Linear
                 scr.x = Screen.width / 16;
                 scr.y = Screen.height / 9;
 
-                GUI.Box(new Rect(0, 0, scr.x * 8, Screen.height), "");
+                // All Comment code are originial from Jaymie
+                //GUI.Box(new Rect(0, 0, scr.x * 8, Screen.height), "Inventory");
+                GUI.Box(new Rect(0, 0, scr.x * 9, Screen.height), "");
+                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "Inventory", baseBackgroundStyle);
                 Display();
                 if (selectedItem != null)
                 {
-                    GUI.Box(new Rect(4.375f * scr.x, 0.25f * scr.y, 3 * scr.x, 0.35f * scr.y), selectedItem.Name);
+                    GUI.Box(new Rect(4.375f * scr.x, 0.75f * scr.y, 3 * scr.x, 0.35f * scr.y), selectedItem.Name, boxStyle);
                     GUI.skin = invSkin;
-                    GUI.DrawTexture(new Rect(4.375f* scr.x, 0.75f*scr.y, 3*scr.x, 3*scr.y), selectedItem.Icon);
-                    GUI.Box(new Rect(4.375f * scr.x, 4f * scr.y, 3 * scr.x, 2 * scr.y), selectedItem.Description);
+                    GUI.Box(new Rect(4.375f* scr.x, 1.25f*scr.y, 3*scr.x, 3*scr.y), selectedItem.Icon);
+                    GUI.Box(new Rect(4.375f * scr.x, 4.5f * scr.y, 3 * scr.x, 2 * scr.y), selectedItem.Description);
                     GUI.skin = null; 
                 }
                 else
                 { return; }
+                ItemUse(selectedItem.Type);
             }            
         }
 
@@ -97,7 +106,7 @@ namespace Linear
             {
                 for (int i = 0; i < inv.Count; i++)
                 {
-                    if(GUI.Button(new Rect(0.5f*scr.x, 0.25f*scr.y + i * (0.25f * scr.y), 3*scr.x, 0.25f*scr.y), inv[i].Name))
+                    if(GUI.Button(new Rect(0.5f*scr.x, 0.75f*scr.y + i * (0.35f * scr.y), 3*scr.x, 0.35f*scr.y), inv[i].Name))
                     {
                         selectedItem = inv[i];
                     }
@@ -110,14 +119,14 @@ namespace Linear
 
                 for (int i = 0; i < inv.Count; i++)
                 {
-                    if (GUI.Button(new Rect(0.5f * scr.x, 0.25f * scr.y + i * (0.25f * scr.y), 3 * scr.x, 0.25f * scr.y), inv[i].Name))
+                    if (GUI.Button(new Rect(0.5f * scr.x, 0.75f * scr.y + i * (0.35f * scr.y), 3 * scr.x, 0.35f * scr.y), inv[i].Name))
                     {
                         selectedItem = inv[i];
                     }
                 }
 
                 // End 
-
+                GUI.EndScrollView();
             }
         }
 
@@ -146,7 +155,7 @@ namespace Linear
                 case ItemType.Misc:
                     break;
             }
-            if (GUI.Button(new Rect(scr.x, scr.y, scr.x, scr.y), "Discard"))
+            if (GUI.Button(new Rect(6.5f*scr.x, 6.5f*scr.y, scr.x, 0.5f*scr.y), "Discard"))
             {
                 for (int i = 0; i < equipmentSlots.Length; i++)
                 {
@@ -162,6 +171,16 @@ namespace Linear
                 droppedItem.name = selectedItem.Name;
                 droppedItem.AddComponent<Rigidbody>().useGravity = true;
                 // reduce or delete
+                if(selectedItem.Amount > 1)
+                {
+                    selectedItem.Amount--;
+                }
+                else
+                {
+                    inv.Remove(selectedItem);
+                    selectedItem = null;
+                    return;
+                }
             }
         }
     }
