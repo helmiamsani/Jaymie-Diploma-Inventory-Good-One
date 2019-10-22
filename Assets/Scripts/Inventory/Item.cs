@@ -93,5 +93,6 @@ public enum ItemType
     Craftable,
     Money,
     Quest,
-    Misc
+    Misc,
+    All
 }
