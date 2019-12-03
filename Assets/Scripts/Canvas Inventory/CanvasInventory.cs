@@ -55,6 +55,7 @@ public class CanvasInventory : MonoBehaviour
         inv.Add(ItemData.CreateItem(2));
         inv.Add(ItemData.CreateItem(81));
         inv.Add(ItemData.CreateItem(61));
+
         for (int i = 0; i < inv.Count; i++)
         {
             leftButtons[i] = Instantiate(invButton, content);
@@ -69,6 +70,7 @@ public class CanvasInventory : MonoBehaviour
         if (Input.GetKey(KeyCode.I))
         {
             inv.Add(ItemData.CreateItem(Random.Range(0, 5)));
+
             for (int i = 0; i < inv.Count; i++)
             {
                 leftButtons[i] = Instantiate(invButton, content);
